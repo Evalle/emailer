@@ -35,14 +35,19 @@ def get_schedule():
 
 
 def get_weather_forecast(key):
-    url = 'http://api.openweathermap.org/data/2.5/weather?id=3067696&units=metric&appid=' + key
+    url = 'http://api.openweathermap.org/data/2.5/weather?id= 3067696&units=metric&appid=' + key
     weather_request = requests.get(url)
     weather_json = weather_request.json()
     print(weather_json)
 
-    description = weather_json['weather']
+    description = weather_json['weather'][0]['description']
+    temp_min = str(weather_json['main']['temp_min'])
+    temp_max = str(weather_json['main']['temp_max'])
 
-    print(description)
+    forecast = 'The forecast for today is ' + description + ' with a high of ' + \
+    temp_max + ' and a low of ' + temp_min + ' degrees'
+
+    print(forecast)
 
 
 def get_config():
@@ -59,7 +64,7 @@ def get_config():
         return key
     
     else: 
-        print('Make sure that you have apikey.config file in your directory!')
+        print('Make sure you have apikey.config file in working directory!')
         sys.exit(1)
 
 
