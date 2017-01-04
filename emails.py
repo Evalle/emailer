@@ -1,6 +1,7 @@
 import sys
 import os
 import requests
+import smtplib
 from configparser import SafeConfigParser
 
 
@@ -35,10 +36,9 @@ def get_schedule():
 
 
 def get_weather_forecast(key):
-    url = 'http://api.openweathermap.org/data/2.5/weather?id= 3067696&units=metric&appid=' + key
+    url = 'http://api.openweathermap.org/data/2.5/weather?id=3067696&units=metric&appid=' + key
     weather_request = requests.get(url)
     weather_json = weather_request.json()
-    print(weather_json)
 
     description = weather_json['weather'][0]['description']
     temp_min = str(weather_json['main']['temp_min'])
@@ -47,10 +47,10 @@ def get_weather_forecast(key):
     forecast = 'The forecast for today is ' + description + ' with a high of ' + \
     temp_max + ' and a low of ' + temp_min + ' degrees'
 
-    print(forecast)
+    return forecast
 
 
-def get_config():
+def get_api_config():
 
     if os.path.isfile('./apikey.config'):
         parser = SafeConfigParser()
@@ -68,12 +68,49 @@ def get_config():
         sys.exit(1)
 
 
+def get_smtp_config():
+
+    if os.path.isfile('./smtp.config'):
+        parser = SafeConfigParser()
+        parser.read('smtp.config')
+        username = parser.get('config', 'username')
+        password = parser.get('config', 'password')
+
+        if username == '':
+            print('You need to obtain username for email account')
+            sys.exit(1)
+        elif password == '':
+            print('You need obtain password for email account')
+            sys.exit(1)
+
+        return username, password
+    
+    else: 
+        print('Make sure you have smtp.config file in working directory!')
+        sys.exit(1)
+
+
+def send_emails(emails, schedule, forecast, username, password):
+    # Connect to smtp server 
+    server = smtplib.SMTP('smtp.gmail.com', '587')
+    # Start encryption
+    server.starttls()
+    # Log in
+    server.login(username, password)
+
+    server.sendmail('emailer.app11@gmail.com', 'shmarnev@gmail.com', 'test')
+    server.quit()
+
+ 
 def main():
-    key = get_config()    
+    username, password = get_smtp_config()
+    key = get_api_config()    
     emails = get_emails()
     print(emails)
     schedule = get_schedule()
     print(schedule)
-    get_weather_forecast(key)
-
+    forecast = get_weather_forecast(key)
+    print(forecast)
+    send_emails(emails, schedule, forecast, username, password)
+    
 main()
