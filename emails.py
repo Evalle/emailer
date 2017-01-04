@@ -35,10 +35,14 @@ def get_schedule():
 
 
 def get_weather_forecast(key):
-    url = 'http://api.openweathermap.org/data/2.5/find?q=Prague&units=metric&appid=' + key
+    url = 'http://api.openweathermap.org/data/2.5/weather?id=3067696&units=metric&appid=' + key
     weather_request = requests.get(url)
     weather_json = weather_request.json()
     print(weather_json)
+
+    description = weather_json['weather']
+
+    print(description)
 
 
 def get_config():
