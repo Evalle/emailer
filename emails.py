@@ -73,8 +73,8 @@ def get_smtp_config():
     if os.path.isfile('./smtp.config'):
         parser = SafeConfigParser()
         parser.read('smtp.config')
-        username = parser.get('config', 'username')
-        password = parser.get('config', 'password')
+        username = parser.get('credentials', 'username')
+        password = parser.get('credentials', 'password')
 
         if username == '':
             print('You need to obtain username for email account')
@@ -112,5 +112,5 @@ def main():
     forecast = get_weather_forecast(key)
     print(forecast)
     send_emails(emails, schedule, forecast, username, password)
-    
+
 main()
