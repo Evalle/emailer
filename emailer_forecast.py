@@ -4,7 +4,9 @@ from configparser import SafeConfigParser
 from weather import get_weather_forecast
 from sender import send_emails
 
+
 def get_emails():   
+
     emails = dict()
 
     try:
