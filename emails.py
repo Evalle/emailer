@@ -16,23 +16,11 @@ def get_emails():
             emails[email] = name.strip()        
     
     except FileNotFoundError as err:
+        print('You need to create emailes_with_names.txt file')
         print(err)
         sys.exit(1)
 
     return emails
-
-
-def get_schedule():
-    
-    try:
-        schedule_file = open('schedule.txt', 'r')
-    except FileNotFoundError as err:
-        print(err)
-        sys.exit(1)
-
-    schedule = schedule_file.read()
-    
-    return schedule
 
 
 def get_weather_forecast(key):
@@ -90,7 +78,7 @@ def get_smtp_config():
         sys.exit(1)
 
 
-def send_emails(emails, schedule, forecast, username, password):
+def send_emails(emails, forecast, username, password):
     # Connect to smtp server 
     server = smtplib.SMTP('smtp.gmail.com', '587')
     # Start encryption
@@ -112,8 +100,7 @@ def main():
     username, password = get_smtp_config()
     key = get_api_config()    
     emails = get_emails()
-    schedule = get_schedule()
     forecast = get_weather_forecast(key)
-    send_emails(emails, schedule, forecast, username, password)
+    send_emails(emails, forecast, username, password)
 
 main()
