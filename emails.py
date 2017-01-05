@@ -95,10 +95,16 @@ def send_emails(emails, schedule, forecast, username, password):
     server = smtplib.SMTP('smtp.gmail.com', '587')
     # Start encryption
     server.starttls()
-    # Log in
+    # Login
     server.login(username, password)
 
-    server.sendmail('emailer.app11@gmail.com', 'shmarnev@gmail.com', 'test')
+    # Send to whole mail list
+    for to_email, name in emails.items():
+        message = 'Subject: Weather forecast for today\n'
+        message += 'Hi ' + name + '!\n\n'
+        message += forecast + '\n\n'
+        message += 'Cheers, your email forecast app'
+        server.sendmail('emailer.app11@gmail.com', to_email, message)
     server.quit()
 
  
@@ -106,11 +112,8 @@ def main():
     username, password = get_smtp_config()
     key = get_api_config()    
     emails = get_emails()
-    print(emails)
     schedule = get_schedule()
-    print(schedule)
     forecast = get_weather_forecast(key)
-    print(forecast)
     send_emails(emails, schedule, forecast, username, password)
 
 main()
