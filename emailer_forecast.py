@@ -5,23 +5,23 @@ from weather import get_weather_forecast
 from sender import send_emails
 
 
-def get_emails():   
+def get_emails():
 
     emails = dict()
 
     try:
         email_file = open('emails_with_names.txt', 'r')
-        
+
         for line in email_file:
             (email, name) = line.split(',')
-            emails[email] = name.strip()        
-    
+            emails[email] = name.strip()
+
     except FileNotFoundError as err:
         print('You need to create emailes_with_names.txt file')
         print(err)
         sys.exit(1)
 
-    return emails 
+    return emails
 
 
 def get_api_config():
@@ -36,8 +36,8 @@ def get_api_config():
             sys.exit(1)
 
         return key
-    
-    else: 
+
+    else:
         print('Make sure you have apikey.config file in working directory!')
         sys.exit(1)
 
@@ -58,15 +58,15 @@ def get_smtp_config():
             sys.exit(1)
 
         return username, password
-    
-    else: 
+
+    else:
         print('Make sure you have smtp.config file in working directory!')
         sys.exit(1)
 
- 
+
 def main():
     username, password = get_smtp_config()
-    key = get_api_config()    
+    key = get_api_config()
     emails = get_emails()
     forecast = get_weather_forecast(key)
     send_emails(emails, forecast, username, password)

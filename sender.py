@@ -1,7 +1,8 @@
 import smtplib
 
+
 def send_emails(emails, forecast, username, password):
-    # Connect to smtp server 
+    # Connect to smtp server
     server = smtplib.SMTP('smtp.gmail.com', '587')
     # Start encryption
     server.starttls()
